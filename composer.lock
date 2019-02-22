@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf6076e4254a0154b00e0a3ee9ac8e67",
+    "content-hash": "636fda3b0e71f253907fcf4ade9a7ec4",
     "packages": [
         {
             "name": "markbaker/complex",
