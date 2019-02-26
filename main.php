@@ -5,10 +5,11 @@ require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+
 $PATH_TO_PROCESS = 'files/to_process/';
 $PATH_PROCESSED = 'files/processed/';
-$PATH_WITH_ERROR = 'files/with_error/';
 $PATH_BILLET = 'files/billet/';
+$PATH_WITH_ERROR = 'files/with_error/';
 
 $fileList = glob($PATH_TO_PROCESS . '*');
 
@@ -26,13 +27,13 @@ foreach ($fileList as $fileName) {
 }
 
 function exportToHtml($billetName, $templateHtml) {
-    file_put_contents("{$PATH_BILLET}{$billetName}.html", $templateHtml);
+    file_put_contents("{$GLOBALS['PATH_BILLET']}{$billetName}.html", $templateHtml);
 }
 
 function exportToPdf($billetName, $templateHtml) {
     $mpdf = new \Mpdf\Mpdf();
     $mpdf->WriteHTML($templateHtml);
-    $mpdf->Output("{$PATH_BILLET}{$billetName}.pdf", 'F');
+    $mpdf->Output("{$GLOBALS['PATH_BILLET']}{$billetName}.pdf", 'F');
 }
 
 function getFileData($worksheet, $row) {
@@ -54,12 +55,12 @@ function getFileData($worksheet, $row) {
 }
 
 function getFileEncodedToHtml($file, $mime) {  
-  $contents = file_get_contents($file);
-  $base64   = base64_encode($contents); 
-  return ('data:' . $mime . ';base64,' . $base64);
+$contents = file_get_contents($file);
+$base64   = base64_encode($contents); 
+return ('data:' . $mime . ';base64,' . $base64);
 }
 
-function getFileName() {
+function getFileName($fileName) {
     $fileNameArray = explode("/", $fileName);
     return $fileNameArray[(count($fileNameArray) - 1)];
 }
@@ -99,11 +100,11 @@ function processFile($fileName) {
             exportToPdf($billetName, $templateHtml);
         }
         
-        rename($fileName, $PATH_PROCESSED . "PROCESSADO_" . $fileNameArray[2]);
-        echo "Moved {$fileName} to {$PATH_PROCESSED} \n";
+        rename($fileName, $GLOBALS['PATH_PROCESSED'] . "PROCESSADO_" . getFileName($fileName));
+        echo "Moved {$fileName} to {$GLOBALS['PATH_PROCESSED']} \n";
     } catch (Exception $e) {
-        rename($fileName, $PATH_WITH_ERROR . "ERRO_" . $fileNameArray[2]);
+        rename($fileName, $GLOBALS['PATH_WITH_ERROR'] . "ERRO_" . getFileName($fileName));
         echo "Exception {$e->getMessage()} \n";
-        echo "Moved {$fileName} to {$PATH_WITH_ERROR} \n";
+        echo "Moved {$fileName} to {$GLOBALS['PATH_WITH_ERROR']} \n";
     }
 }
